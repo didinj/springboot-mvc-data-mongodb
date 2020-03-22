@@ -7,13 +7,13 @@ package com.springmvc.springmongodbweb.controllers;
 
 import com.springmvc.springmongodbweb.models.Product;
 import com.springmvc.springmongodbweb.repositories.ProductRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -50,33 +50,33 @@ public class ProductController {
 
     @RequestMapping("/show/{id}")
     public String show(@PathVariable String id, Model model) {
-        model.addAttribute("product", productRepository.findOne(id));
+        model.addAttribute("product", productRepository.findById(id).get());
         return "show";
     }
 
     @RequestMapping("/delete")
     public String delete(@RequestParam String id) {
-        Product product = productRepository.findOne(id);
-        productRepository.delete(product);
+        Optional<Product> product = productRepository.findById(id);
+        productRepository.delete(product.get());
 
         return "redirect:/product";
     }
     
     @RequestMapping("/edit/{id}")
     public String edit(@PathVariable String id, Model model) {
-        model.addAttribute("product", productRepository.findOne(id));
+        model.addAttribute("product", productRepository.findById(id).get());
         return "edit";
     }
     
     @RequestMapping("/update")
     public String update(@RequestParam String id, @RequestParam String prodName, @RequestParam String prodDesc, @RequestParam Double prodPrice, @RequestParam String prodImage) {
-        Product product = productRepository.findOne(id);
-        product.setProdName(prodName);
-        product.setProdDesc(prodDesc);
-        product.setProdPrice(prodPrice);
-        product.setProdImage(prodImage);
-        productRepository.save(product);
+        Optional<Product> product = productRepository.findById(id);
+        product.get().setProdName(prodName);
+        product.get().setProdDesc(prodDesc);
+        product.get().setProdPrice(prodPrice);
+        product.get().setProdImage(prodImage);
+        productRepository.save(product.get());
 
-        return "redirect:/show/" + product.getId();
+        return "redirect:/show/" + product.get().getId();
     }
 }

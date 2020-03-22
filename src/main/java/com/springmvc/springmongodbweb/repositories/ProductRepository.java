@@ -13,9 +13,8 @@ import org.springframework.data.repository.CrudRepository;
  * @author didin
  */
 public interface ProductRepository extends CrudRepository<Product, String> {
-    @Override
-    Product findOne(String id);
     
     @Override
-    void delete(Product deleted);
+    public void delete(Product product);
+    
 }
